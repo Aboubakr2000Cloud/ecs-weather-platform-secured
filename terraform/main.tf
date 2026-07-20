@@ -41,7 +41,7 @@ module "rds" {
   db_username        = var.db_username
   db_password        = var.db_password
   db_instance_class  = var.db_instance_class
-  kms_key_id         = module.security.kms_key_arn
+  kms_key_arn        = module.security.kms_key_arn
   name_prefix        = local.name_prefix
   common_tags        = local.common_tags
 }
@@ -58,29 +58,29 @@ module "ecr" {
 module "ecs" {
   source = "./modules/ecs"
 
-  cluster_name        = "${local.name_prefix}-cluster"
-  service_name        = var.service_name
-  container_name      = var.container_name
-  name_prefix         = local.name_prefix
-  common_tags         = local.common_tags
-  image_url           = "${module.ecr.repository_url}:bootstrap"
-  private_subnet_ids  = module.vpc.private_subnet_ids
-  ecs_sg_id           = module.security_groups.ecs_sg_id
-  target_group_arn    = module.alb.target_group_arn
-  execution_role_arn  = aws_iam_role.ecs_execution.arn
-  task_role_arn       = aws_iam_role.ecs_task.arn
-  region              = var.region
-  db_host             = module.rds.db_host
-  db_name             = var.db_name
-  db_username         = var.db_username
-  db_secret_arn       = aws_secretsmanager_secret_version.db_password.arn
-  weather_api_key_arn = aws_secretsmanager_secret_version.weather_api_key.arn
-  db_host_parameter_arn = aws_ssm_parameter.db_host.arn
-  db_name_parameter_arn = aws_ssm_parameter.db_name.arn
-  db_port_parameter_arn = aws_ssm_parameter.db_port.arn
-  db_user_parameter_arn = aws_ssm_parameter.db_user.arn
-  log_group_name      = "/ecs/${local.name_prefix}"
-  desired_count       = var.ecs_desired_count
+  cluster_name          = "${local.name_prefix}-cluster"
+  service_name          = var.service_name
+  container_name        = var.container_name
+  name_prefix           = local.name_prefix
+  common_tags           = local.common_tags
+  image_url             = "${module.ecr.repository_url}:bootstrap"
+  private_subnet_ids    = module.vpc.private_subnet_ids
+  ecs_sg_id             = module.security_groups.ecs_sg_id
+  target_group_arn      = module.alb.target_group_arn
+  execution_role_arn    = aws_iam_role.ecs_execution.arn
+  task_role_arn         = aws_iam_role.ecs_task.arn
+  region                = var.region
+  db_host               = module.rds.db_host
+  db_name               = var.db_name
+  db_username           = var.db_username
+  db_secret_arn         = aws_secretsmanager_secret_version.db_password.arn
+  weather_api_key_arn   = aws_secretsmanager_secret_version.weather_api_key.arn
+  db_user_parameter_arn = module.security.db_user_parameter_arn
+  db_host_parameter_arn = module.security.db_host_parameter_arn
+  db_name_parameter_arn = module.security.db_name_parameter_arn
+  db_port_parameter_arn = module.security.db_port_parameter_arn
+  log_group_name        = "/ecs/${local.name_prefix}"
+  desired_count         = var.ecs_desired_count
 }
 
 # ── CLOUDWATCH ───────────────────────────────────────────────────────────

@@ -38,14 +38,14 @@ resource "aws_db_instance" "this" {
 
   multi_az            = false
   publicly_accessible = false
-  
+
   kms_key_id = var.kms_key_arn
 
   final_snapshot_identifier = "${var.name_prefix}-final-snapshot"
   skip_final_snapshot       = true
   backup_retention_period   = 7
-  
-  auto_minor_version_upgrade = true      # auto-patch minor versions
+
+  auto_minor_version_upgrade = true # auto-patch minor versions
   copy_tags_to_snapshot      = true
 
   deletion_protection = true

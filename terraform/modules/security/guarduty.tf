@@ -7,7 +7,7 @@ resource "aws_guardduty_detector" "this" {
     }
   }
 
-  tags  = merge(
+  tags = merge(
     var.common_tags,
     {
       Name = var.name_prefix

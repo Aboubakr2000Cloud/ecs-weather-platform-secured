@@ -11,9 +11,9 @@ terraform {
 
 # S3 bucket for CloudTrail logs
 resource "aws_s3_bucket" "cloudtrail" {
-  bucket        = "${var.name_prefix}-cloudtrail-${data.aws_caller_identity.current.account_id}"
-  force_destroy = true   # for learning — remove in production
-  tags          = merge(
+  bucket        = "${var.name_prefix}-cloudtrail-${var.account_id}"
+  force_destroy = true # for learning — remove in production
+  tags = merge(
     var.common_tags,
     {
       Name = var.name_prefix
@@ -36,18 +36,18 @@ resource "aws_s3_bucket_policy" "cloudtrail" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid    = "AWSCloudTrailAclCheck"
-        Effect = "Allow"
+        Sid       = "AWSCloudTrailAclCheck"
+        Effect    = "Allow"
         Principal = { Service = "cloudtrail.amazonaws.com" }
-        Action   = "s3:GetBucketAcl"
-        Resource = aws_s3_bucket.cloudtrail.arn
+        Action    = "s3:GetBucketAcl"
+        Resource  = aws_s3_bucket.cloudtrail.arn
       },
       {
-        Sid    = "AWSCloudTrailWrite"
-        Effect = "Allow"
+        Sid       = "AWSCloudTrailWrite"
+        Effect    = "Allow"
         Principal = { Service = "cloudtrail.amazonaws.com" }
-        Action   = "s3:PutObject"
-        Resource = "${aws_s3_bucket.cloudtrail.arn}/AWSLogs/${var.aws_caller_identity.current.account_id}/*"
+        Action    = "s3:PutObject"
+        Resource  = "${aws_s3_bucket.cloudtrail.arn}/AWSLogs/${var.account_id}/*"
         Condition = {
           StringEquals = {
             "s3:x-amz-acl" = "bucket-owner-full-control"
@@ -63,15 +63,15 @@ resource "aws_cloudtrail" "this" {
   name                          = "${var.name_prefix}-trail"
   s3_bucket_name                = aws_s3_bucket.cloudtrail.id
   include_global_service_events = true
-  is_multi_region_trail         = false   # single region for learning
-  enable_log_file_validation    = true    # detect tampering
+  is_multi_region_trail         = false # single region for learning
+  enable_log_file_validation    = true  # detect tampering
 
   event_selector {
     read_write_type           = "All"
     include_management_events = true
   }
 
-  tags                        = merge(
+  tags = merge(
     var.common_tags,
     {
       Name = var.name_prefix
