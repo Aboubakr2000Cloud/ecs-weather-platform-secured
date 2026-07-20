@@ -199,22 +199,22 @@ jobs:
           python -m pytest tests/integration/ -v
 
 # ── Trufflehog ────────────────────────────────────────────────────
-trufflehog:
-  name: TruffleHog Secret Scan
-  runs-on: ubuntu-latest
+  trufflehog:
+    name: TruffleHog Secret Scan
+    runs-on: ubuntu-latest
 
-  steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Scan for leaked secrets
-      uses: trufflesecurity/trufflehog@main
-      with:
-        path: ./
-        base: ${{ github.event.repository.default_branch }}
-        head: HEAD
-        extra_args: --only-verified
+      - name: Scan for leaked secrets
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --only-verified
 
 # ── Docker Build Verification ─────────────────────────────────────
 
