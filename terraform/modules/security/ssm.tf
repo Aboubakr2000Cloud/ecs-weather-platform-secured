@@ -1,14 +1,3 @@
-terraform {
-  required_version = ">= 1.5"
-
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
-}
-
 resource "aws_ssm_parameter" "db_host" {
   name  = "/${var.name_prefix}/db-host"
   type  = "String"
