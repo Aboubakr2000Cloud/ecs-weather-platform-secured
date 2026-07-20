@@ -208,11 +208,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Scan for leaked secrets
+      - name: Scan for leaked secrets (TruffleHog)
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          base: ${{ github.event.repository.default_branch }}
+          base: HEAD~1
           head: HEAD
           extra_args: --only-verified
 
@@ -227,6 +227,7 @@ jobs:
       - quality
       - unit-tests
       - integration-tests
+      - trufflehog
 
     steps:
 
