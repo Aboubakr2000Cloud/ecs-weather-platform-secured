@@ -41,6 +41,7 @@ module "rds" {
   db_username        = var.db_username
   db_password        = var.db_password
   db_instance_class  = var.db_instance_class
+  kms_key_id         = module.security.kms_key_arn
   name_prefix        = local.name_prefix
   common_tags        = local.common_tags
 }
@@ -74,6 +75,10 @@ module "ecs" {
   db_username         = var.db_username
   db_secret_arn       = aws_secretsmanager_secret_version.db_password.arn
   weather_api_key_arn = aws_secretsmanager_secret_version.weather_api_key.arn
+  db_host_parameter_arn = aws_ssm_parameter.db_host.arn
+  db_name_parameter_arn = aws_ssm_parameter.db_name.arn
+  db_port_parameter_arn = aws_ssm_parameter.db_port.arn
+  db_user_parameter_arn = aws_ssm_parameter.db_user.arn
   log_group_name      = "/ecs/${local.name_prefix}"
   desired_count       = var.ecs_desired_count
 }
@@ -92,4 +97,20 @@ module "monitoring" {
   db_instance_identifier = module.rds.db_instance_identifier
   log_group_name         = module.ecs.log_group_name
   common_tags            = local.common_tags
+}
+
+# ── SECURITY ───────────────────────────────────────────────────────────
+module "security" {
+  source = "./modules/security"
+
+  account_id = data.aws_caller_identity.current.account_id
+
+  ecs_execution_role_arn = aws_iam_role.ecs_execution.arn
+  ecs_task_role_arn      = aws_iam_role.ecs_task.arn
+  db_host                = module.rds.db_host
+  name_prefix            = local.name_prefix
+  common_tags            = local.common_tags
+  db_name                = var.db_name
+  db_username            = var.db_username
+  region                = var.region
 }

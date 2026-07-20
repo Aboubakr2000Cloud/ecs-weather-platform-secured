@@ -52,16 +52,33 @@ resource "aws_ecs_task_definition" "this" {
       protocol      = "tcp"
     }]
 
-    environment = [
-      { name = "DB_HOST", value = var.db_host },
-      { name = "DB_NAME", value = var.db_name },
-      { name = "DB_PORT", value = "3306" },
-      { name = "DB_USER", value = var.db_username }
-    ]
+    environment = []
 
     secrets = [
-      { name = "DB_PASSWORD", valueFrom = var.db_secret_arn },
-      { name = "WEATHER_API_KEY", valueFrom = var.weather_api_key_arn }
+      {
+        name      = "DB_HOST"
+        valueFrom = var.db_host_parameter_arn
+      },
+      {
+        name      = "DB_NAME"
+        valueFrom = var.db_name_parameter_arn
+      },
+      {
+        name      = "DB_PORT"
+        valueFrom = var.db_port_parameter_arn
+      },
+      {
+        name      = "DB_USER"
+        valueFrom = var.db_user_parameter_arn
+      },
+      {
+        name      = "DB_PASSWORD"
+        valueFrom = var.db_secret_arn
+      },
+      {
+        name      = "WEATHER_API_KEY"
+        valueFrom = var.weather_api_key_arn
+      }
     ]
 
     logConfiguration = {
