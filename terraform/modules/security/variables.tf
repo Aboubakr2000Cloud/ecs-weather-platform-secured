@@ -12,4 +12,8 @@ variable "db_username" { type = string }
 variable "common_tags" {
   type = map(string)
 }
+variable "enable_guardduty" {
+  type    = bool
+  default = true
+}
 

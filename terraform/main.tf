@@ -112,4 +112,5 @@ module "security" {
   common_tags            = local.common_tags
   db_name                = var.db_name
   db_username            = var.db_username
+  enable_guardduty       = false
 }
