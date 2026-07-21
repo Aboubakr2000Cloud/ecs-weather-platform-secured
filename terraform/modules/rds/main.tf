@@ -48,7 +48,7 @@ resource "aws_db_instance" "this" {
   auto_minor_version_upgrade = true # auto-patch minor versions
   copy_tags_to_snapshot      = true
 
-  deletion_protection = true
+  deletion_protection = false
   storage_encrypted   = true
 
   tags = merge(
