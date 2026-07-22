@@ -70,9 +70,6 @@ module "ecs" {
   execution_role_arn    = aws_iam_role.ecs_execution.arn
   task_role_arn         = aws_iam_role.ecs_task.arn
   region                = var.region
-  db_host               = module.rds.db_host
-  db_name               = var.db_name
-  db_username           = var.db_username
   db_secret_arn         = aws_secretsmanager_secret_version.db_password.arn
   weather_api_key_arn   = aws_secretsmanager_secret_version.weather_api_key.arn
   db_user_parameter_arn = module.security.db_user_parameter_arn
